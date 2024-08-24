@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Formatter</title>
+    <style>
+        pre {
+            font-family: monospace;
+            background-color: #f7f7f7;
+            padding: 10px;
+            border: 1px solid #ccc;
+            white-space: pre-wrap;
+        }
+        .keyword { color: #859900; }
+        .number { color: #b58900; }
+        .string { color: #2aa198; }
+        .comment { color: #586e75; font-style: italic; }
+        .operator { color: #d33682; }
+        .variable { color: #839496; }
+    </style>
+</head>
+<body>
+    <h1>Code Formatter</h1>
+    <textarea id="codeInput" rows="10" cols="50" placeholder="Enter your Python code here..."></textarea>
+    <br>
+    <button onclick="formatCode()">Format Code</button>
+    <h2>Formatted Code</h2>
+    <pre id="formattedCode"></pre>
+
+    <script>
+        function escapeHtml(unsafe) {
+            return unsafe
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function formatCode() {
+            const codeInput = document.getElementById('codeInput').value;
+            const formattedCode = '《color:#839496》' + codeInput
+                .replace(/(\d+)/g, '《/color》《color:#b58900》$1《/color》《color:#839496》')
+                .replace(/    /g, '|《》 |《》 |《》 |《》 ')
+                .replace(/\n/g, '《/color》\n《color:#839496》')
+                .replace(/(^| )(%|==)($| )/g, '$1《/color》《color:#dc322f》$2《/color》《color:#839496》$3')
+                .replace(/('[^']*')/g, '《/color》《color:#2aa198》$1《/color》《color:#839496》')
+                .replace(/(^| )(for|if|elif|else|in)($|:| )/g, '$1《/color》《color:#859900》$2《/color》《color:#839496》$3')
+                .replace(/《color:#[\u\l\d]{6}》 《\/color》/g, ' ')
+                + '《/color》';
+            document.getElementById('formattedCode').innerHTML = escapeHtml(formattedCode);
+        }
+    </script>
+</body>
+</html>
