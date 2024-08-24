@@ -86,34 +86,9 @@
                 "《/color》\n《/box》《/box》"
         }
         function copyCode() {
-            const codeElement = document.getElementById("convertedCode").innerHTML;
-            const codeText = codeElement.innerText || codeElement.textContent;
-            if (navigator.clipboard && window.isSecureContext) {
-                // For modern browsers
-                navigator.clipboard.writeText(codeText).then(() => {
-                    alert("コードがクリップボードにコピーされました！");
-                }, () => {
-                    alert("コピーに失敗しました。ブラウザの設定を確認してください。");
-                });
-            } else {
-                // Fallback for older browsers
-                const textArea = document.createElement("textarea");
-                textArea.value = codeText;
-                textArea.style.position = "fixed";  // Avoid scrolling to bottom
-                document.body.appendChild(textArea);
-                textArea.focus();
-                textArea.select();
-
-                try {
-                    const successful = document.execCommand('copy');
-                    const msg = successful ? "コードがクリップボードにコピーされました！" : "コピーに失敗しました。";
-                    alert(msg);
-                } catch (err) {
-                    alert("コピーに失敗しました。エラー: " + err);
-                }
-
-                document.body.removeChild(textArea);
-            }
+            navigator.clipboard.writeText(document.getElementById("convertedCode").innerHTML).then(
+                () => { alert("コピーされました！"); },
+                () => { alert("コピーに失敗しました。"); })
         }
     </script>
 </body>
