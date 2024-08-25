@@ -139,9 +139,10 @@ sampleVariable</textarea>
             const coloredInput = (
                 `《color:${colors.base01}》` +
                 codeInput
-                    .replace(/\|/g, "||@》")
-                    .replace(/《/g, "《|《》")
-                    .replace(/@/g, "《")
+                    .replace(/\|/g, `||@》`)
+                    .replace(/《/g, `《|《》`)
+                    .replace(/@/g, `《`)
+                    .replace(/\$\$([^\$《]+?)\$\$/g, `《/color》《color:${colors.base0}》|$$$$《》$1|$$$$《》《/color》《color:${colors.base01}》`)
                     .replace(/\n/g, `《/color》\n《color:${colors.base01}》`)
                     .replace(
                         /《\|《》(\/?box)([^》]*)》/g,
