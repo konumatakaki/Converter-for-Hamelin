@@ -9,9 +9,7 @@
 
 <body>
     <h1>ハーメルン用コード変換システム</h1>
-    <textarea id="codeInput" rows="20" cols="50" placeholder="ここにコードを入力">
-a
-# a</textarea>
+    <textarea id="codeInput" rows="20" cols="50" placeholder="ここにコードを入力"></textarea>
     <br />
     <button onclick="convertPython()">Python用</button>
     <button onclick="convertHameln()">ハーメルン用</button>
@@ -58,7 +56,7 @@ a
                 .replace(/\n/g, `《/color》\n《color:${colors.base0}》`)
                 .replace(/(import)/g, `《/color》《color:${colors.red}》$1《/color》《color:${colors.base0}》`)
                 .replace(/(#\ [^《\n]*)/g, `《/color》《color:${colors.base01}》《i》$1《/i》《/color》《color:${colors.base0}》`)
-                .replace(/(?<!《)(\*\*|==|!=|<=|>=|\+=|\-=|&&|\|\||=|%|\+|\-|\*|\/)/g, `《/color》《color:${colors.magenta}》$1《/color》《color:${colors.base0}》`)
+                .replace(/(?<!《)(\*\*|==|!=|<=|>=|\+=|\-=|&&|\|\||=|%|\+|\-|\*|\/|and|or|not)/g, `《/color》《color:${colors.magenta}》$1《/color》《color:${colors.base0}》`)
                 .replace(/\b([a-z][a-zA-Z0-9_]+)\s*(?=\()/g, `《/color》《color:${colors.blue}》$1《/color》《color:${colors.base0}》`)
                 .replace(/\b([A-Z][a-zA-Z0-9_]+)\s*(?=\()/g, `《/color》《color:${colors.violet}》$1《/color》《color:${colors.base0}》`)
                 .replace(/(["'`][^"'`]*["'`])/g, `《/color》《color:${colors.cyan}》$1《/color》《color:${colors.base0}》`)
