@@ -10,12 +10,16 @@
 <body>
     <h1>ハーメルン用コード変換システム</h1>
     <label for="codeInput">コードを入力: </label>
-    <textarea id="codeInput" style="width: 100%; height: 150px;" placeholder="ここにコードを入力"></textarea>
+    <textarea id="codeInput" style="width: 100%; height: 150px" placeholder="ここにコードを入力"></textarea>
     <br />
     <label for="variableInput">改行区切りで変数を入力(Python用): </label>
-    <textarea id="variableInput" style="width: 100%; height: 150px;" placeholder="変数を入力">sampleVariable</textarea>
+    <textarea id="variableInput" style="width: 100%; height: 150px" placeholder="変数を入力">
+sampleVariable</textarea>
     <button onclick="convertPython()">Python用</button>
     <button onclick="convertHameln()">ハーメルン用</button>
+    <br />
+    <br />
+    <button onclick="convertColor()">ダークモード/ライトモード切り替え</button>
     <h2>変換結果</h2>
     <button onclick="copyCode()">コピー</button>
     <br />
@@ -23,25 +27,32 @@
     <pre id="convertedCode">
     Press the button to select the conversion format.
     </pre>
+    <p>
+    連絡先はこちら:
+    <br />
+    <a href="https://github.com/konumatakaki/Converter-for-Hamelin">GitHub - konumatakaki/Converter-for-Hamelin</a>
+    <br />
+    <a href="https://x.com/KonumaTakaki">Twitter - KonumaTakaki</a>
+    </p>
 
     <script>
         const colors = {
-            base03: '#002b36',
-            base02: '#073642',
-            base01: '#586e75',
-            base00: '#657b83',
-            base0: '#839496',
-            base1: '#93a1a1',
-            base2: '#eee8d5',
-            base3: '#fdf6e3',
-            yellow: '#b58900',
-            orange: '#cb4b16',
-            red: '#dc322f',
-            magenta: '#d33682',
-            violet: '#6c71c4',
-            blue: '#268bd2',
-            cyan: '#2aa198',
-            green: '#859900'
+            base03: "#002b36",
+            base02: "#073642",
+            base01: "#586e75",
+            base00: "#657b83",
+            base0: "#839496",
+            base1: "#93a1a1",
+            base2: "#eee8d5",
+            base3: "#fdf6e3",
+            yellow: "#b58900",
+            orange: "#cb4b16",
+            red: "#dc322f",
+            magenta: "#d33682",
+            violet: "#6c71c4",
+            blue: "#268bd2",
+            cyan: "#2aa198",
+            green: "#859900",
         };
 
         function escapeHtml(unsafe) {
@@ -54,61 +65,137 @@
         }
 
         function createVariableList() {
-            const textareaValue = document.getElementById('variableInput').value;
+            const textareaValue = document.getElementById("variableInput").value;
 
             const variableList = textareaValue
-                .split('\n')
-                .map(line => line.trim())
-                .filter(line => line);
+                .split("\n")
+                .map((line) => line.trim())
+                .filter((line) => line);
             console.log(variableList);
             return variableList;
         }
 
         function convertPython() {
             const codeInput = document.getElementById("codeInput").value;
-            const variableList = new RegExp(`\\b(${createVariableList().join("|")})\\b`, "g");
-            const coloredInput = (`《color:${colors.base0}》` + codeInput + `《/color》`)
+            const variableList = new RegExp(
+                `\\b(${createVariableList().join("|")})\\b`,
+                "g"
+            );
+            const coloredInput = (
+                `《color:${colors.base0}》` +
+                codeInput +
+                `《/color》`
+            )
                 .replace(/\n/g, `《/color》\n《color:${colors.base0}》`)
-                .replace(/(import)/g, `《/color》《color:${colors.red}》$1《/color》《color:${colors.base0}》`)
+                .replace(
+                    /(import)/g,
+                    `《/color》《color:${colors.red}》$1《/color》《color:${colors.base0}》`
+                )
 
-                .replace(/(\*\*|\/\/|<<|>>|=|\+=|-=|\*=|\/=|%=|\*\*=|\/\/=|&=|\|=|\^=|<<=|>>=|==|!=|<=|>=|:=|\+|-|\*|(?<!《)\/|%|~|&|\||\^|<|>)/g, `《/color》《color:${colors.magenta}》$1《/color》《color:${colors.base0}》`)
-                .replace(/\b(is|in|and|or|not)/g, `《/color》《color:${colors.magenta}》$1《/color》《color:${colors.base0}》`)
-                .replace(/\b([a-z][a-zA-Z0-9_]+)\s*(?=\()/g, `《/color》《color:${colors.blue}》$1《/color》《color:${colors.base0}》`)
-                .replace(/\b([A-Z][a-zA-Z0-9_]+)\s*(?=\()/g, `《/color》《color:${colors.violet}》$1《/color》《color:${colors.base0}》`)
-                .replace(/(["'`][^"'`]*["'`])/g, `《/color》《color:${colors.cyan}》$1《/color》《color:${colors.base0}》`)
-                .replace(/\b(for|else|elif|while|do|switch|case|break|continue|return|function|in|if)\b/g, `《/color》《color:${colors.green}》$1《/color》《color:${colors.base0}》`)
-                .replace(variableList, `《/color》《color:${colors.base1}》《b》$1《/b》《/color》《color:${colors.base0}》`)
-                .replace(/(#\ [^《\n]*)/g, `《/color》《color:${colors.base01}》《i》$1《/i》《/color》《color:${colors.base0}》`)
-                .replace(/(?<!#)(\b\d+)(\.\d+)?\b/g, `《/color》《color:${colors.yellow}》$1$2《/color》《color:${colors.base0}》`)
-                .replace(/《color:#[0-9A-Fa-f]{6}》(\s*)《\/color》/g, `$1`)
+                .replace(
+                    /(\*\*|\/\/|<<|>>|=|\+=|-=|\*=|\/=|%=|\*\*=|\/\/=|&=|\|=|\^=|<<=|>>=|==|!=|<=|>=|:=|\+|-|\*|(?<!《)\/|%|~|&|\||\^|<|>)/g,
+                    `《/color》《color:${colors.magenta}》$1《/color》《color:${colors.base0}》`
+                )
+                .replace(
+                    /\b(is|in|and|or|not)/g,
+                    `《/color》《color:${colors.magenta}》$1《/color》《color:${colors.base0}》`
+                )
+                .replace(
+                    /\b([a-z][a-zA-Z0-9_]+)\s*(?=\()/g,
+                    `《/color》《color:${colors.blue}》$1《/color》《color:${colors.base0}》`
+                )
+                .replace(
+                    /\b([A-Z][a-zA-Z0-9_]+)\s*(?=\()/g,
+                    `《/color》《color:${colors.violet}》$1《/color》《color:${colors.base0}》`
+                )
+                .replace(
+                    /(["'`][^"'`]*["'`])/g,
+                    `《/color》《color:${colors.cyan}》$1《/color》《color:${colors.base0}》`
+                )
+                .replace(
+                    /\b(for|else|elif|while|do|switch|case|break|continue|return|function|in|if)\b/g,
+                    `《/color》《color:${colors.green}》$1《/color》《color:${colors.base0}》`
+                )
+                .replace(
+                    variableList,
+                    `《/color》《color:${colors.base1}》《b》$1《/b》《/color》《color:${colors.base0}》`
+                )
+                .replace(
+                    /(#\ [^《\n]*)/g,
+                    `《/color》《color:${colors.base01}》《i》$1《/i》《/color》《color:${colors.base0}》`
+                )
+                .replace(
+                    /(?<!#)(\b\d+)(\.\d+)?\b/g,
+                    `《/color》《color:${colors.yellow}》$1$2《/color》《color:${colors.base0}》`
+                )
+                .replace(/《color:#[0-9A-Fa-f]{6}》(\s*)《\/color》/g, `$1`);
 
-            document.getElementById("convertedCode").innerHTML =
-                escapeHtml((putInBox(coloredInput)));
+            document.getElementById("convertedCode").innerHTML = escapeHtml(
+                putInBox(coloredInput)
+            );
         }
         function convertHameln() {
             const codeInput = document.getElementById("codeInput").value;
-            const coloredInput = (`《color:${colors.base01}》` + (codeInput
-                .replace(/\|/g, "||@》")
-                .replace(/《/g, "《|《》")
-                .replace(/@/g, "《")
-                .replace(/\n/g, `《/color》\n《color:${colors.base01}》`)
-                .replace(/《\|《》(\/?box)([^》]*)》/g, `《/color》《color:${colors.base0}》《|《》《/color》《color:${colors.orange}》$1《/color》《color:${colors.base0}》$2》《/color》《color:${colors.base01}》`)
-                .replace(/《\|《》(\/?(?:bordercolor|bgcolor|opacity|xsmall|blink|color|shake|small|speak|telop|blur|edge|fade|font|link|xbig|big|ref|sub|sup|vib|id|b|i|s|u))([^》]*)》/g, `《/color》《color:${colors.base0}》《|《》《/color》《color:${colors.blue}》$1《/color》《color:${colors.base0}》$2》《/color》《color:${colors.base01}》`)
-                .replace(/《\|《》(\/?(?:boxbordercolor|boxbgcolor|marquee|center|right|table|left|hr))([^》]*)》/g, `《/color》《color:${colors.base0}》《|《》《/color》《color:${colors.cyan}》$1《/color》《color:${colors.base0}》$2》《/color》《color:${colors.base01}》`)
-            ) + `《/color》`)
-                .replace(/《color:#[0-9A-Fa-f]{6}》(\s*)《\/color》/g, `$1`)
-            document.getElementById("convertedCode").innerHTML =
-                escapeHtml(putInBox(coloredInput));
+            const coloredInput = (
+                `《color:${colors.base01}》` +
+                codeInput
+                    .replace(/\|/g, "||@》")
+                    .replace(/《/g, "《|《》")
+                    .replace(/@/g, "《")
+                    .replace(/\n/g, `《/color》\n《color:${colors.base01}》`)
+                    .replace(
+                        /《\|《》(\/?box)([^》]*)》/g,
+                        `《/color》《color:${colors.base0}》《|《》《/color》《color:${colors.orange}》$1《/color》《color:${colors.base0}》$2》《/color》《color:${colors.base01}》`
+                    )
+                    .replace(
+                        /《\|《》(\/?(?:bordercolor|bgcolor|opacity|xsmall|blink|color|shake|small|speak|telop|blur|edge|fade|font|link|xbig|big|ref|sub|sup|vib|id|b|i|s|u))([^》]*)》/g,
+                        `《/color》《color:${colors.base0}》《|《》《/color》《color:${colors.blue}》$1《/color》《color:${colors.base0}》$2》《/color》《color:${colors.base01}》`
+                    )
+                    .replace(
+                        /《\|《》(\/?(?:boxbordercolor|boxbgcolor|marquee|center|right|table|left|hr))([^》]*)》/g,
+                        `《/color》《color:${colors.base0}》《|《》《/color》《color:${colors.cyan}》$1《/color》《color:${colors.base0}》$2》《/color》《color:${colors.base01}》`
+                    ) +
+                `《/color》`
+            ).replace(/《color:#[0-9A-Fa-f]{6}》(\s*)《\/color》/g, `$1`);
+            document.getElementById("convertedCode").innerHTML = escapeHtml(
+                putInBox(coloredInput)
+            );
         }
         function putInBox(code) {
-            return `《box:w100%,bg${colors.base02},p1,font61,lh1.2,inline》\n《box:w100%,bg${colors.base03},p1,font61,lh1.2,inline,pre-wrap》\n` +
+            return (
+                `《box:w100%,bg${colors.base02},p1,font61,lh1.2,inline》\n《box:w100%,bg${colors.base03},p1,font61,lh1.2,inline,pre-wrap》\n` +
                 code +
                 `\n《/box》\n《/box》`
+            );
         }
         function copyCode() {
-            navigator.clipboard.writeText(document.getElementById("convertedCode").textContent).then(
-                () => { alert("コピーされました！"); },
-                () => { alert("コピーに失敗しました。"); })
+            navigator.clipboard
+                .writeText(document.getElementById("convertedCode").textContent)
+                .then(
+                    () => {
+                        alert("コピーされました！");
+                    },
+                    () => {
+                        alert("コピーに失敗しました。");
+                    }
+                );
+        }
+        const changeMap = {
+            "#002b36": "#fdf6e3",
+            "#073642": "#eee8d5",
+            "#586e75": "#93a1a1",
+            "#657b83": "#839496",
+        };
+
+        function convertColor() {
+            const codeInput = document.getElementById("codeInput").value;
+            let coloredInput = codeInput;
+            for (const [from, to] of Object.entries(changeMap)) {
+                const regex = new RegExp(from, "g");
+                coloredInput = coloredInput.replace(regex, to);
+            }
+
+            document.getElementById("convertedCode").innerHTML = escapeHtml(coloredInput)
         }
     </script>
 </body>
